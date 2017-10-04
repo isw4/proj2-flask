@@ -40,6 +40,7 @@ def process(raw):
 
         if field == "begin":
             try:
+                global base
                 base = arrow.get(content, "MM/DD/YYYY")
                 # print("Base date {}".format(base.isoformat()))
             except:
