@@ -50,3 +50,7 @@ tr.even {
     padding-left: 2ex;
     font-style: italic;
 }
+
+tr.highlight {
+    background-color: #abf5fc
+}

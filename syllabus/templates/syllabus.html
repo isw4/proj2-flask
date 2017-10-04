@@ -14,11 +14,11 @@
 <table class="class-schedule">
   {% for entry in g.schedule %}
   {% if loop.index is divisibleby 2 %}
-  <tr class="even">
+  <tr class="even {{ entry.week | isCurrent }}">
   {% else %}
-  <tr class="odd">
+  <tr class="odd {{ entry.week | isCurrent }}">
   {% endif %}	   
-    <td class="week">{{ entry.week }}</td>
+    <td class="week">[Week {{entry.week}}]: {{ entry.week | fmtdate }}</td>
     <td class="topic">{{ entry.topic }}</td>
     <td class="project">{{ entry.project}}</td>
   </tr>
