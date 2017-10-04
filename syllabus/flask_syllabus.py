@@ -33,7 +33,8 @@ if configuration.DEBUG:
 # it atomically in the view functions.
 #
 schedule = pre.process(open(configuration.SYLLABUS))
-
+baseDate = arrow.get(pre.base)
+now = arrow.now()
 
 ###
 # Pages
@@ -90,13 +91,25 @@ def no_you_cant(error):
 #################
 
 @app.template_filter('fmtdate')
-def format_arrow_date(date):
+def format_arrow_date(weekNum):
     try:
-        normal = arrow.get(date)
-        return normal.format("ddd MM/DD/YYYY")
+        shifted = baseDate.shift(weeks =+ (int(weekNum)-1))
+        return shifted.format("MM/DD/YYYY")
     except:
         return "(bad date)"
 
+@app.template_filter('isCurrent')
+def check_current_week(weekNum):
+    try:
+        wkDateFM = format_arrow_date(weekNum)
+        wkDate = arrow.get(wkDateFM, "MM/DD/YYYY")
+        wkSpan = wkDate.span('week')
+        if now >= wkSpan[0] and now <= wkSpan[1]:
+            return "highlight"
+        else:
+            return ""
+    except:
+        return ""
 
 #
 # If run as main program (not under gunicorn), we
