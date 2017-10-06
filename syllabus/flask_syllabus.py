@@ -110,8 +110,8 @@ def check_current_week(week_num):
     try:
         wk_date_formatted = format_arrow_date(week_num)
         wk_date = arrow.get(wk_date_formatted, "MM/DD/YYYY")
-        wk_span = wkDate.span('week')
-        if today >= wkSpan[0] and today <= wkSpan[1]:
+        wk_span = wk_date.span('week')
+        if today >= wk_span[0] and today <= wk_span[1]:
             return "highlight"
         else:
             return ""
