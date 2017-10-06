@@ -34,7 +34,7 @@ if configuration.DEBUG:
 #
 schedule = pre.process(open(configuration.SYLLABUS))
 start_date = arrow.get(pre.base)
-now = arrow.now()
+today = arrow.now()
 
 ###
 # Pages
@@ -111,7 +111,7 @@ def check_current_week(week_num):
         wk_date_formatted = format_arrow_date(week_num)
         wk_date = arrow.get(wk_date_formatted, "MM/DD/YYYY")
         wk_span = wkDate.span('week')
-        if now >= wkSpan[0] and now <= wkSpan[1]:
+        if today >= wkSpan[0] and today <= wkSpan[1]:
             return "highlight"
         else:
             return ""
