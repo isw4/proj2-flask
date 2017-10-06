@@ -29,11 +29,11 @@ else:
 if configuration.DEBUG:
     app.logger.setLevel(logging.DEBUG)
 
-# Pre-processed schedule is global, so be careful to update
+# Pre-processed schedule and startDate is global, so be careful to update
 # it atomically in the view functions.
 #
 schedule = pre.process(open(configuration.SYLLABUS))
-baseDate = arrow.get(pre.base)
+start_date = arrow.get(pre.base)
 now = arrow.now()
 
 ###
@@ -41,6 +41,7 @@ now = arrow.now()
 # Each of these transmits the default "200/OK" header
 # followed by html from the template.
 ###
+
 
 @app.route("/")
 @app.route("/index")
@@ -90,20 +91,26 @@ def no_you_cant(error):
 #
 #################
 
-@app.template_filter('fmtdate')
-def format_arrow_date(weekNum):
+@app.template_filter('fmt_date')
+def format_arrow_date(week_num):
+    """
+    Returns the date(MM/DD/YYYY) in the week # of the class, counted from the date the class started.
+    The first week is the same week in which the class started.
+    """
     try:
-        shifted = baseDate.shift(weeks =+ (int(weekNum)-1))
+        shifted = start_date.shift(weeks=+ (int(week_num)-1))
         return shifted.format("MM/DD/YYYY")
     except:
         return "(bad date)"
 
-@app.template_filter('isCurrent')
-def check_current_week(weekNum):
+
+@app.template_filter('is_current')
+def check_current_week(week_num):
+    """Sets the class of the html tag to be highlighted if the current date falls in the span of the week"""
     try:
-        wkDateFM = format_arrow_date(weekNum)
-        wkDate = arrow.get(wkDateFM, "MM/DD/YYYY")
-        wkSpan = wkDate.span('week')
+        wk_date_formatted = format_arrow_date(week_num)
+        wk_date = arrow.get(wk_date_formatted, "MM/DD/YYYY")
+        wk_span = wkDate.span('week')
         if now >= wkSpan[0] and now <= wkSpan[1]:
             return "highlight"
         else:
